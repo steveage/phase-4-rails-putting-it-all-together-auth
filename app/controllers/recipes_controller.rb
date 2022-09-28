@@ -3,20 +3,21 @@ class RecipesController < ApplicationController
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
     
     def index
-        if session.include? :user_id
-            render json: Recipe.all, include: :user, status: 201
-        else
-            render json: { errors: ["User not authorized."] }, status: :unauthorized
-        end
+        #if session.include? :user_id
+            render json: Recipe.all
+        #else
+            #render json: { errors: ["User not authorized."] }, status: :unauthorized
+        #end
     end
 
     def create
-        if session.include? :user_id
-            recipe = Recipe.create!(title: params[:title], instructions: params[:instructions], minutes_to_complete: params[:minutes_to_complete], user_id: :user_id)
+        #if session.include? :user_id
+        #byebug
+            recipe = @user.recipes.create!(recipe_params)
             render json: recipe, include: :user, status: :created
-        else
-            render json: { errors: ["User not authorized."] }, status: :unauthorized
-        end
+        #else
+         #   render json: { errors: ["User not authorized."] }, status: :unauthorized
+        #end
     end
 
     private
